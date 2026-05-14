@@ -1,4 +1,126 @@
 function App() {
+  const standardError = `{
+  "success": false,
+  "error": {
+    "status": 400,
+    "code": "VALIDATION_ERROR",
+    "message": "Faltan campos obligatorios."
+  }
+}`;
+
+  const postAuthRegisterError = [
+    {
+      status: 400,
+      code: "VALIDATION_ERROR",
+      message: "Faltan campos obligatorios.",
+    },
+    {
+      status: 409,
+      code: "EMAIL_ALREADY_EXISTS",
+      message: "Ya existe una cuenta registrada con este correo.",
+    },
+    {
+      status: 409,
+      code: "USERNAME_ALREADY_EXISTS",
+      message: "El nombre de usuario ya está en uso.",
+    },
+    {
+      status: 500,
+      code: "INTERNAL_SERVER_ERROR",
+      message: "Ocurrió un error inesperado en el servidor.",
+    },
+  ];
+
+  const postAuthLoginError = [
+    {
+      status: 400,
+      code: "VALIDATION_ERROR",
+      message: "Debes ingresar correo y contraseña.",
+    },
+    {
+      status: 401,
+      code: "INVALID_CREDENTIALS",
+      message: "Correo o contraseña incorrectos.",
+    },
+    {
+      status: 500,
+      code: "INTERNAL_SERVER_ERROR",
+      message: "Ocurrió un error inesperado en el servidor.",
+    },
+  ];
+
+  const getAuthMeError = [
+    {
+      status: 401,
+      code: "MISSING_TOKEN",
+      message: "Debes iniciar sesión para acceder a este recurso.",
+    },
+    {
+      status: 401,
+      code: "INVALID_TOKEN",
+      message: "La sesión no es válida o expiró.",
+    },
+    {
+      status: 404,
+      code: "USER_NOT_FOUND",
+      message: "El usuario no existe.",
+    },
+  ];
+
+  const getPublicacionesError = [
+    {
+      status: 400,
+      code: "INVALID_QUERY_PARAMS",
+      message: "Los filtros enviados no son válidos.",
+    },
+    {
+      status: 500,
+      code: "INTERNAL_SERVER_ERROR",
+      message: "Ocurrió un error inesperado en el servidor.",
+    },
+  ];
+
+  const getPublicacionByIdError = [
+    {
+      status: 400,
+      code: "INVALID_ID",
+      message: "El id de la publicación no es válido.",
+    },
+    {
+      status: 404,
+      code: "PUBLICACION_NOT_FOUND",
+      message: "La publicación solicitada no existe.",
+    },
+    {
+      status: 500,
+      code: "INTERNAL_SERVER_ERROR",
+      message: "Ocurrió un error inesperado en el servidor.",
+    },
+  ];
+
+  const postPublicacionesError = [
+    {
+      status: 400,
+      code: "VALIDATION_ERROR",
+      message: "Faltan campos obligatorios para crear la publicación.",
+    },
+    {
+      status: 401,
+      code: "MISSING_TOKEN",
+      message: "Debes iniciar sesión para crear una publicación.",
+    },
+    {
+      status: 401,
+      code: "INVALID_TOKEN",
+      message: "La sesión no es válida o expiró.",
+    },
+    {
+      status: 500,
+      code: "INTERNAL_SERVER_ERROR",
+      message: "Ocurrió un error inesperado en el servidor.",
+    },
+  ];
+
   const endpoints = [
     {
       modulo: "Auth",
@@ -13,6 +135,7 @@ function App() {
   "password": "123456"
 }`,
       respuesta: `{
+  "success": true,
   "token": "jwt...",
   "user": {
     "id": 1,
@@ -21,6 +144,7 @@ function App() {
     "rol": "usuario"
   }
 }`,
+      errores: postAuthRegisterError,
     },
     {
       modulo: "Auth",
@@ -33,6 +157,7 @@ function App() {
   "password": "123456"
 }`,
       respuesta: `{
+  "success": true,
   "token": "jwt...",
   "user": {
     "id": 1,
@@ -40,6 +165,7 @@ function App() {
     "rol": "usuario"
   }
 }`,
+      errores: postAuthLoginError,
     },
     {
       modulo: "Auth",
@@ -49,12 +175,16 @@ function App() {
       auth: "Sí",
       body: "No requiere body.",
       respuesta: `{
-  "id": 1,
-  "username": "felipe",
-  "nombre_visible": "Felipe",
-  "correo": "felipe@mail.com",
-  "rol": "usuario"
+  "success": true,
+  "user": {
+    "id": 1,
+    "username": "felipe",
+    "nombre_visible": "Felipe",
+    "correo": "felipe@mail.com",
+    "rol": "usuario"
+  }
 }`,
+      errores: getAuthMeError,
     },
     {
       modulo: "Publicaciones",
@@ -64,6 +194,7 @@ function App() {
       auth: "No",
       body: "No requiere body.",
       respuesta: `{
+  "success": true,
   "data": [
     {
       "id": 1,
@@ -84,6 +215,7 @@ function App() {
   "limit": 10,
   "total": 20
 }`,
+      errores: getPublicacionesError,
     },
     {
       modulo: "Publicaciones",
@@ -93,18 +225,22 @@ function App() {
       auth: "No",
       body: "No requiere body.",
       respuesta: `{
-  "id": 1,
-  "tipo": "imagen",
-  "es_venta": true,
-  "autor": {
-    "id": 3,
-    "username": "frutas_pedro"
-  },
-  "contenido": {
-    "descripcion": "Caja de frutillas frescas",
-    "url_imagen": "https://..."
+  "success": true,
+  "publicacion": {
+    "id": 1,
+    "tipo": "imagen",
+    "es_venta": true,
+    "autor": {
+      "id": 3,
+      "username": "frutas_pedro"
+    },
+    "contenido": {
+      "descripcion": "Caja de frutillas frescas",
+      "url_imagen": "https://..."
+    }
   }
 }`,
+      errores: getPublicacionByIdError,
     },
     {
       modulo: "Publicaciones",
@@ -119,12 +255,16 @@ function App() {
   "url_imagen": "https://..."
 }`,
       respuesta: `{
-  "id": 5,
-  "tipo": "imagen",
-  "es_venta": true,
-  "descripcion": "Caja de frutillas frescas",
-  "url_imagen": "https://..."
+  "success": true,
+  "publicacion": {
+    "id": 5,
+    "tipo": "imagen",
+    "es_venta": true,
+    "descripcion": "Caja de frutillas frescas",
+    "url_imagen": "https://..."
+  }
 }`,
+      errores: postPublicacionesError,
     },
   ];
 
@@ -155,11 +295,32 @@ function App() {
 
         <article>
           <h2>Autenticación</h2>
-          <p>
-            Las rutas protegidas deben enviar el token JWT en el header:
-          </p>
+          <p>Las rutas protegidas deben enviar el token JWT en el header:</p>
           <code>Authorization: Bearer &lt;token&gt;</code>
         </article>
+      </section>
+
+      <section className="error-format">
+        <h2>Formato estándar de errores</h2>
+        <p>
+          Todos los errores de la API seguirán esta estructura. Esto permite que
+          el frontend maneje los errores de manera consistente.
+        </p>
+
+        <ul>
+          <li>
+            <strong>status:</strong> código HTTP de la respuesta.
+          </li>
+          <li>
+            <strong>code:</strong> identificador interno del error.
+          </li>
+          <li>
+            <strong>message:</strong> mensaje legible para mostrar o manejar en
+            frontend.
+          </li>
+        </ul>
+
+        <pre>{standardError}</pre>
       </section>
 
       <section className="endpoints">
@@ -190,6 +351,31 @@ function App() {
               <div>
                 <h3>Respuesta esperada</h3>
                 <pre>{endpoint.respuesta}</pre>
+              </div>
+            </div>
+
+            <div className="errors-section">
+              <h3>Errores posibles</h3>
+
+              <div className="errors-grid">
+                {endpoint.errores.map((error, errorIndex) => (
+                  <div className="error-card" key={errorIndex}>
+                    <div className="error-header">
+                      <span className="error-status">{error.status}</span>
+                      <span className="error-code">{error.code}</span>
+                    </div>
+                    <p>{error.message}</p>
+
+                    <pre>{`{
+  "success": false,
+  "error": {
+    "status": ${error.status},
+    "code": "${error.code}",
+    "message": "${error.message}"
+  }
+}`}</pre>
+                  </div>
+                ))}
               </div>
             </div>
           </article>
