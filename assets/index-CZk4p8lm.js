@@ -12,6 +12,7 @@ Error generating stack: `+e.message+`
   "correo": "felipe@mail.com",
   "password": "123456"
 }`,respuesta:`{
+  "success": true,
   "token": "jwt...",
   "user": {
     "id": 1,
@@ -19,23 +20,28 @@ Error generating stack: `+e.message+`
     "nombre_visible": "Felipe",
     "rol": "usuario"
   }
-}`},{modulo:`Auth`,metodo:`POST`,ruta:`/api/auth/login`,descripcion:`Inicia sesión y retorna un token JWT.`,auth:`No`,body:`{
+}`,errores:[{status:400,code:`VALIDATION_ERROR`,message:`Faltan campos obligatorios.`},{status:409,code:`EMAIL_ALREADY_EXISTS`,message:`Ya existe una cuenta registrada con este correo.`},{status:409,code:`USERNAME_ALREADY_EXISTS`,message:`El nombre de usuario ya está en uso.`},{status:500,code:`INTERNAL_SERVER_ERROR`,message:`Ocurrió un error inesperado en el servidor.`}]},{modulo:`Auth`,metodo:`POST`,ruta:`/api/auth/login`,descripcion:`Inicia sesión y retorna un token JWT.`,auth:`No`,body:`{
   "correo": "felipe@mail.com",
   "password": "123456"
 }`,respuesta:`{
+  "success": true,
   "token": "jwt...",
   "user": {
     "id": 1,
     "username": "felipe",
     "rol": "usuario"
   }
-}`},{modulo:`Auth`,metodo:`GET`,ruta:`/api/auth/me`,descripcion:`Obtiene la información del usuario logueado.`,auth:`Sí`,body:`No requiere body.`,respuesta:`{
-  "id": 1,
-  "username": "felipe",
-  "nombre_visible": "Felipe",
-  "correo": "felipe@mail.com",
-  "rol": "usuario"
-}`},{modulo:`Publicaciones`,metodo:`GET`,ruta:`/api/publicaciones`,descripcion:`Obtiene las publicaciones para poblar la Main Page.`,auth:`No`,body:`No requiere body.`,respuesta:`{
+}`,errores:[{status:400,code:`VALIDATION_ERROR`,message:`Debes ingresar correo y contraseña.`},{status:401,code:`INVALID_CREDENTIALS`,message:`Correo o contraseña incorrectos.`},{status:500,code:`INTERNAL_SERVER_ERROR`,message:`Ocurrió un error inesperado en el servidor.`}]},{modulo:`Auth`,metodo:`GET`,ruta:`/api/auth/me`,descripcion:`Obtiene la información del usuario logueado.`,auth:`Sí`,body:`No requiere body.`,respuesta:`{
+  "success": true,
+  "user": {
+    "id": 1,
+    "username": "felipe",
+    "nombre_visible": "Felipe",
+    "correo": "felipe@mail.com",
+    "rol": "usuario"
+  }
+}`,errores:[{status:401,code:`MISSING_TOKEN`,message:`Debes iniciar sesión para acceder a este recurso.`},{status:401,code:`INVALID_TOKEN`,message:`La sesión no es válida o expiró.`},{status:404,code:`USER_NOT_FOUND`,message:`El usuario no existe.`}]},{modulo:`Publicaciones`,metodo:`GET`,ruta:`/api/publicaciones`,descripcion:`Obtiene las publicaciones para poblar la Main Page.`,auth:`No`,body:`No requiere body.`,respuesta:`{
+  "success": true,
   "data": [
     {
       "id": 1,
@@ -55,27 +61,47 @@ Error generating stack: `+e.message+`
   "page": 1,
   "limit": 10,
   "total": 20
-}`},{modulo:`Publicaciones`,metodo:`GET`,ruta:`/api/publicaciones/:id`,descripcion:`Obtiene el detalle de una publicación específica.`,auth:`No`,body:`No requiere body.`,respuesta:`{
-  "id": 1,
-  "tipo": "imagen",
-  "es_venta": true,
-  "autor": {
-    "id": 3,
-    "username": "frutas_pedro"
-  },
-  "contenido": {
-    "descripcion": "Caja de frutillas frescas",
-    "url_imagen": "https://..."
+}`,errores:[{status:400,code:`INVALID_QUERY_PARAMS`,message:`Los filtros enviados no son válidos.`},{status:500,code:`INTERNAL_SERVER_ERROR`,message:`Ocurrió un error inesperado en el servidor.`}]},{modulo:`Publicaciones`,metodo:`GET`,ruta:`/api/publicaciones/:id`,descripcion:`Obtiene el detalle de una publicación específica.`,auth:`No`,body:`No requiere body.`,respuesta:`{
+  "success": true,
+  "publicacion": {
+    "id": 1,
+    "tipo": "imagen",
+    "es_venta": true,
+    "autor": {
+      "id": 3,
+      "username": "frutas_pedro"
+    },
+    "contenido": {
+      "descripcion": "Caja de frutillas frescas",
+      "url_imagen": "https://..."
+    }
   }
-}`},{modulo:`Publicaciones`,metodo:`POST`,ruta:`/api/publicaciones`,descripcion:`Crea una nueva publicación.`,auth:`Sí`,body:`{
+}`,errores:[{status:400,code:`INVALID_ID`,message:`El id de la publicación no es válido.`},{status:404,code:`PUBLICACION_NOT_FOUND`,message:`La publicación solicitada no existe.`},{status:500,code:`INTERNAL_SERVER_ERROR`,message:`Ocurrió un error inesperado en el servidor.`}]},{modulo:`Publicaciones`,metodo:`POST`,ruta:`/api/publicaciones`,descripcion:`Crea una nueva publicación.`,auth:`Sí`,body:`{
   "tipo": "imagen",
   "es_venta": true,
   "descripcion": "Caja de frutillas frescas",
   "url_imagen": "https://..."
 }`,respuesta:`{
-  "id": 5,
-  "tipo": "imagen",
-  "es_venta": true,
-  "descripcion": "Caja de frutillas frescas",
-  "url_imagen": "https://..."
-}`}],t=e=>e===`GET`?`method get`:e===`POST`?`method post`:e===`PATCH`?`method patch`:e===`DELETE`?`method delete`:`method`;return(0,x.jsxs)(`main`,{className:`docs-page`,children:[(0,x.jsxs)(`section`,{className:`hero`,children:[(0,x.jsx)(`p`,{className:`badge`,children:`OnlyFrutas Backend`}),(0,x.jsx)(`h1`,{children:`Documentación de Endpoints`}),(0,x.jsx)(`p`,{children:`Esta página resume los endpoints principales de la API para la Entrega 1. Sirve como contrato básico entre frontend y backend.`})]}),(0,x.jsxs)(`section`,{className:`info-grid`,children:[(0,x.jsxs)(`article`,{children:[(0,x.jsx)(`h2`,{children:`Base URL`}),(0,x.jsx)(`code`,{children:`https://onlyfrutas-backend.onrender.com`})]}),(0,x.jsxs)(`article`,{children:[(0,x.jsx)(`h2`,{children:`Autenticación`}),(0,x.jsx)(`p`,{children:`Las rutas protegidas deben enviar el token JWT en el header:`}),(0,x.jsx)(`code`,{children:`Authorization: Bearer <token>`})]})]}),(0,x.jsxs)(`section`,{className:`endpoints`,children:[(0,x.jsx)(`h2`,{children:`Endpoints principales`}),e.map((e,n)=>(0,x.jsxs)(`article`,{className:`endpoint-card`,children:[(0,x.jsxs)(`div`,{className:`endpoint-header`,children:[(0,x.jsx)(`span`,{className:t(e.metodo),children:e.metodo}),(0,x.jsx)(`code`,{children:e.ruta})]}),(0,x.jsx)(`p`,{className:`description`,children:e.descripcion}),(0,x.jsxs)(`div`,{className:`meta`,children:[(0,x.jsxs)(`span`,{children:[`Módulo: `,e.modulo]}),(0,x.jsxs)(`span`,{children:[`Requiere JWT: `,e.auth]})]}),(0,x.jsxs)(`div`,{className:`code-grid`,children:[(0,x.jsxs)(`div`,{children:[(0,x.jsx)(`h3`,{children:`Body esperado`}),(0,x.jsx)(`pre`,{children:e.body})]}),(0,x.jsxs)(`div`,{children:[(0,x.jsx)(`h3`,{children:`Respuesta esperada`}),(0,x.jsx)(`pre`,{children:e.respuesta})]})]})]},n))]})]})}b.createRoot(document.getElementById(`root`)).render((0,x.jsx)(y.StrictMode,{children:(0,x.jsx)(ee,{})}));
+  "success": true,
+  "publicacion": {
+    "id": 5,
+    "tipo": "imagen",
+    "es_venta": true,
+    "descripcion": "Caja de frutillas frescas",
+    "url_imagen": "https://..."
+  }
+}`,errores:[{status:400,code:`VALIDATION_ERROR`,message:`Faltan campos obligatorios para crear la publicación.`},{status:401,code:`MISSING_TOKEN`,message:`Debes iniciar sesión para crear una publicación.`},{status:401,code:`INVALID_TOKEN`,message:`La sesión no es válida o expiró.`},{status:500,code:`INTERNAL_SERVER_ERROR`,message:`Ocurrió un error inesperado en el servidor.`}]}],t=e=>e===`GET`?`method get`:e===`POST`?`method post`:e===`PATCH`?`method patch`:e===`DELETE`?`method delete`:`method`;return(0,x.jsxs)(`main`,{className:`docs-page`,children:[(0,x.jsxs)(`section`,{className:`hero`,children:[(0,x.jsx)(`p`,{className:`badge`,children:`OnlyFrutas Backend`}),(0,x.jsx)(`h1`,{children:`Documentación de Endpoints`}),(0,x.jsx)(`p`,{children:`Esta página resume los endpoints principales de la API para la Entrega 1. Sirve como contrato básico entre frontend y backend.`})]}),(0,x.jsxs)(`section`,{className:`info-grid`,children:[(0,x.jsxs)(`article`,{children:[(0,x.jsx)(`h2`,{children:`Base URL`}),(0,x.jsx)(`code`,{children:`https://onlyfrutas-backend.onrender.com`})]}),(0,x.jsxs)(`article`,{children:[(0,x.jsx)(`h2`,{children:`Autenticación`}),(0,x.jsx)(`p`,{children:`Las rutas protegidas deben enviar el token JWT en el header:`}),(0,x.jsx)(`code`,{children:`Authorization: Bearer <token>`})]})]}),(0,x.jsxs)(`section`,{className:`error-format`,children:[(0,x.jsx)(`h2`,{children:`Formato estándar de errores`}),(0,x.jsx)(`p`,{children:`Todos los errores de la API seguirán esta estructura. Esto permite que el frontend maneje los errores de manera consistente.`}),(0,x.jsxs)(`ul`,{children:[(0,x.jsxs)(`li`,{children:[(0,x.jsx)(`strong`,{children:`status:`}),` código HTTP de la respuesta.`]}),(0,x.jsxs)(`li`,{children:[(0,x.jsx)(`strong`,{children:`code:`}),` identificador interno del error.`]}),(0,x.jsxs)(`li`,{children:[(0,x.jsx)(`strong`,{children:`message:`}),` mensaje legible para mostrar o manejar en frontend.`]})]}),(0,x.jsx)(`pre`,{children:`{
+  "success": false,
+  "error": {
+    "status": 400,
+    "code": "VALIDATION_ERROR",
+    "message": "Faltan campos obligatorios."
+  }
+}`})]}),(0,x.jsxs)(`section`,{className:`endpoints`,children:[(0,x.jsx)(`h2`,{children:`Endpoints principales`}),e.map((e,n)=>(0,x.jsxs)(`article`,{className:`endpoint-card`,children:[(0,x.jsxs)(`div`,{className:`endpoint-header`,children:[(0,x.jsx)(`span`,{className:t(e.metodo),children:e.metodo}),(0,x.jsx)(`code`,{children:e.ruta})]}),(0,x.jsx)(`p`,{className:`description`,children:e.descripcion}),(0,x.jsxs)(`div`,{className:`meta`,children:[(0,x.jsxs)(`span`,{children:[`Módulo: `,e.modulo]}),(0,x.jsxs)(`span`,{children:[`Requiere JWT: `,e.auth]})]}),(0,x.jsxs)(`div`,{className:`code-grid`,children:[(0,x.jsxs)(`div`,{children:[(0,x.jsx)(`h3`,{children:`Body esperado`}),(0,x.jsx)(`pre`,{children:e.body})]}),(0,x.jsxs)(`div`,{children:[(0,x.jsx)(`h3`,{children:`Respuesta esperada`}),(0,x.jsx)(`pre`,{children:e.respuesta})]})]}),(0,x.jsxs)(`div`,{className:`errors-section`,children:[(0,x.jsx)(`h3`,{children:`Errores posibles`}),(0,x.jsx)(`div`,{className:`errors-grid`,children:e.errores.map((e,t)=>(0,x.jsxs)(`div`,{className:`error-card`,children:[(0,x.jsxs)(`div`,{className:`error-header`,children:[(0,x.jsx)(`span`,{className:`error-status`,children:e.status}),(0,x.jsx)(`span`,{className:`error-code`,children:e.code})]}),(0,x.jsx)(`p`,{children:e.message}),(0,x.jsx)(`pre`,{children:`{
+  "success": false,
+  "error": {
+    "status": ${e.status},
+    "code": "${e.code}",
+    "message": "${e.message}"
+  }
+}`})]},t))})]})]},n))]})]})}b.createRoot(document.getElementById(`root`)).render((0,x.jsx)(y.StrictMode,{children:(0,x.jsx)(ee,{})}));
