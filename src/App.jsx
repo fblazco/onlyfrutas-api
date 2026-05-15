@@ -415,9 +415,24 @@ function App() {
     return "method";
   };
 
+  const scrollToSection = (id) => {
+    const section = document.getElementById(id);
+    if (section) {
+      section.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  };
+
   return (
     <main className="docs-page">
-      <section className="hero">
+      <nav className="docs-navbar">
+        <button onClick={() => scrollToSection("inicio")}>Inicio</button>
+        <button onClick={() => scrollToSection("auth")}>Auth</button>
+        <button onClick={() => scrollToSection("errores")}>Errores</button>
+        <button onClick={() => scrollToSection("endpoints")}>Endpoints</button>
+        <button onClick={() => scrollToSection("setup-db")}>Setup DB</button>
+      </nav>
+
+      <section className="hero" id="inicio">
         <p className="badge">OnlyFrutas Backend</p>
         <h1>Documentación de Endpoints</h1>
         <p>
@@ -426,7 +441,7 @@ function App() {
         </p>
       </section>
 
-      <section className="info-grid">
+      <section className="info-grid" id="auth">
         <article>
           <h2>Base URL</h2>
           <code>https://onlyfrutas-backend.onrender.com</code>
@@ -439,7 +454,7 @@ function App() {
         </article>
       </section>
 
-      <section className="error-format">
+      <section className="error-format" id="errores">
         <h2>Formato estándar de errores</h2>
         <p>
           Todos los errores de la API seguirán esta estructura. Esto permite que
@@ -462,7 +477,7 @@ function App() {
         <pre>{standardError}</pre>
       </section>
 
-      <section className="endpoints">
+      <section className="endpoints" id="endpoints">
         <h2>Endpoints principales</h2>
 
         {endpoints.map((endpoint, index) => (
@@ -520,6 +535,67 @@ function App() {
             </div>
           </article>
         ))}
+      </section>
+
+      <section className="db-setup" id="setup-db">
+        <h2>Setup local de PostgreSQL</h2>
+        <p>
+          Esta sección resume cómo levantar la base de datos localmente para
+          correr el backend de OnlyFrutas.
+        </p>
+
+        <div className="setup-grid">
+          <article>
+            <h3>1. Crear base de datos</h3>
+            <pre>{`psql -U postgres
+
+CREATE DATABASE onlyfrutas;`}</pre>
+          </article>
+
+          <article>
+            <h3>2. Crear usuario</h3>
+            <pre>{`CREATE USER onlyfrutas_user WITH PASSWORD 'TU_PASSWORD_AQUI';
+
+GRANT ALL PRIVILEGES ON DATABASE onlyfrutas TO onlyfrutas_user;`}</pre>
+          </article>
+
+          <article>
+            <h3>3. Dar permisos al schema</h3>
+            <pre>{`\\c onlyfrutas
+
+GRANT ALL ON SCHEMA public TO onlyfrutas_user;
+GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO onlyfrutas_user;
+GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public TO onlyfrutas_user;`}</pre>
+          </article>
+
+          <article>
+            <h3>4. Variables de entorno</h3>
+            <pre>{`DB_NAME=onlyfrutas
+DB_USERNAME=onlyfrutas_user
+DB_PASSWORD=TU_PASSWORD_AQUI
+DB_PORT=5432
+DB_HOST=localhost
+
+JWT_SECRET=onlyfrutas_secret_key
+JWT_EXPIRES_IN=1d`}</pre>
+          </article>
+
+          <article>
+            <h3>5. Levantar backend</h3>
+            <pre>{`npm install
+npm run dev`}</pre>
+          </article>
+
+          <article>
+            <h3>6. Probar health check</h3>
+            <pre>{`GET http://localhost:3000/api/health`}</pre>
+          </article>
+        </div>
+
+        <p className="warning-text">
+          Importante: el archivo <code>.env</code> no debe subirse al
+          repositorio. Debe estar incluido en <code>.gitignore</code>.
+        </p>
       </section>
     </main>
   );
