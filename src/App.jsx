@@ -444,7 +444,7 @@ function App() {
       <section className="info-grid" id="auth">
         <article>
           <h2>Base URL</h2>
-          <code>https://onlyfrutas-backend.onrender.com</code>
+          <code>https://onlyfrutas-backend-26-1.onrender.com/</code>
         </article>
 
         <article>
