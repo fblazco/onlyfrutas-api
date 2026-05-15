@@ -65,9 +65,14 @@ function App() {
       code: "USER_NOT_FOUND",
       message: "El usuario no existe.",
     },
+    {
+      status: 500,
+      code: "INTERNAL_SERVER_ERROR",
+      message: "Ocurrió un error inesperado en el servidor.",
+    },
   ];
 
-  const getPublicacionesError = [
+  const getContentsError = [
     {
       status: 400,
       code: "INVALID_QUERY_PARAMS",
@@ -80,7 +85,7 @@ function App() {
     },
   ];
 
-  const getPublicacionByIdError = [
+  const getContentByIdError = [
     {
       status: 400,
       code: "INVALID_ID",
@@ -88,7 +93,7 @@ function App() {
     },
     {
       status: 404,
-      code: "PUBLICACION_NOT_FOUND",
+      code: "CONTENT_NOT_FOUND",
       message: "La publicación solicitada no existe.",
     },
     {
@@ -98,11 +103,31 @@ function App() {
     },
   ];
 
-  const postPublicacionesError = [
+  const postContentsError = [
     {
       status: 400,
       code: "VALIDATION_ERROR",
       message: "Faltan campos obligatorios para crear la publicación.",
+    },
+    {
+      status: 400,
+      code: "VALIDATION_ERROR",
+      message: "El tipo de contenido no es valido",
+    },
+    {
+      status: 400,
+      code: "VALIDATION_ERROR",
+      message: "URL de imagen no valido",
+    },
+    {
+      status: 400,
+      code: "VALIDATION_ERROR",
+      message: "URL del video no valido",
+    },
+    {
+      status: 400,
+      code: "VALIDATION_ERROR",
+      message: "Post vacio",
     },
     {
       status: 401,
@@ -123,40 +148,40 @@ function App() {
 
   const endpoints = [
     {
-      modulo: "Auth",
-      metodo: "POST",
-      ruta: "/api/auth/register",
-      descripcion: "Registra un nuevo usuario en OnlyFrutas.",
+      module: "Auth",
+      method: "POST",
+      path: "/api/auth/register",
+      description: "Registra un nuevo usuario en OnlyFrutas.",
       auth: "No",
       body: `{
   "username": "felipe",
-  "nombre_visible": "Felipe",
-  "correo": "felipe@mail.com",
+  "visible_name": "Felipe",
+  "email": "felipe@mail.com",
   "password": "123456"
 }`,
-      respuesta: `{
+      response: `{
   "success": true,
   "token": "jwt...",
   "user": {
     "id": 1,
     "username": "felipe",
-    "nombre_visible": "Felipe",
+    "visible_name": "Felipe",
     "rol": "usuario"
   }
 }`,
-      errores: postAuthRegisterError,
+      errors: postAuthRegisterError,
     },
     {
-      modulo: "Auth",
-      metodo: "POST",
-      ruta: "/api/auth/login",
-      descripcion: "Inicia sesión y retorna un token JWT.",
+      module: "Auth",
+      method: "POST",
+      path: "/api/auth/login",
+      description: "Inicia sesión y retorna un token JWT.",
       auth: "No",
       body: `{
-  "correo": "felipe@mail.com",
+  "email": "felipe@mail.com",
   "password": "123456"
 }`,
-      respuesta: `{
+      response: `{
   "success": true,
   "token": "jwt...",
   "user": {
@@ -165,106 +190,199 @@ function App() {
     "rol": "usuario"
   }
 }`,
-      errores: postAuthLoginError,
+      errors: postAuthLoginError,
     },
     {
-      modulo: "Auth",
-      metodo: "GET",
-      ruta: "/api/auth/me",
-      descripcion: "Obtiene la información del usuario logueado.",
+      module: "Auth",
+      method: "GET",
+      path: "/api/auth/me",
+      description: "Obtiene la información del usuario logueado.",
       auth: "Sí",
       body: "No requiere body.",
-      respuesta: `{
+      response: `{
   "success": true,
   "user": {
     "id": 1,
     "username": "felipe",
-    "nombre_visible": "Felipe",
-    "correo": "felipe@mail.com",
+    "visible_name": "Felipe",
+    "email": "felipe@mail.com",
     "rol": "usuario"
   }
 }`,
-      errores: getAuthMeError,
+      errors: getAuthMeError,
     },
     {
-      modulo: "Publicaciones",
-      metodo: "GET",
-      ruta: "/api/publicaciones",
-      descripcion: "Obtiene las publicaciones para poblar la Main Page.",
+      module: "Content",
+      method: "GET",
+      path: "/api/publicaciones",
+      description: "Obtiene las publicaciones para poblar la Main Page.",
       auth: "No",
       body: "No requiere body.",
-      respuesta: `{
+      response: `{
   "success": true,
   "data": [
     {
       "id": 1,
-      "tipo": "imagen",
-      "es_venta": true,
-      "cantidad_reacciones": 12,
-      "autor": {
+      "type": "image",
+      "is_sale": true,
+      "reaction_count": 12,
+      "image_url": "https://...",
+      "video_url": null,
+      "author": {
         "id": 3,
-        "username": "frutas_pedro"
+        "username": "frutas_pedro",
+        "visible_name": "Frutas Pedro",
+        "image": "https://..."
       },
-      "imagen": {
-        "descripcion": "Manzanas rojas recién cosechadas",
-        "url_imagen": "https://..."
-      }
+      "createdAt": "2026-05-15T12:00:00.000Z",
+      "text": "Caja de frutillas frescas"
+    },
+    {
+      "id": 2,
+      "type": "post",
+      "is_sale": false,
+      "reaction_count": 5,
+      "image_url": null,
+      "video_url": null,
+      "author": {
+        "id": 4,
+        "username": "la_feria",
+        "visible_name": "La Feria",
+        "image": null
+      },
+      "createdAt": "2026-05-15T13:30:00.000Z",
+      "text": "Hoy llegaron nuevas frutas de temporada."
+    },
+    {
+      "id": 3,
+      "type": "reel",
+      "is_sale": false,
+      "reaction_count": 8,
+      "image_url": null,
+      "video_url": "https://...",
+      "author": {
+        "id": 5,
+        "username": "frutas_sur",
+        "visible_name": "Frutas del Sur",
+        "image": null
+      },
+      "createdAt": "2026-05-15T14:00:00.000Z",
+      "text": "Preparando pedidos de la mañana."
     }
   ],
   "page": 1,
   "limit": 10,
   "total": 20
 }`,
-      errores: getPublicacionesError,
+      errors: getContentsError,
     },
     {
-      modulo: "Publicaciones",
-      metodo: "GET",
-      ruta: "/api/publicaciones/:id",
-      descripcion: "Obtiene el detalle de una publicación específica.",
+      module: "Content",
+      method: "GET",
+      path: "/api/publicaciones/:id",
+      description: "Obtiene el detalle de una publicación específica.",
       auth: "No",
       body: "No requiere body.",
-      respuesta: `{
+      response: `{
   "success": true,
-  "publicacion": {
+  "content": {
     "id": 1,
-    "tipo": "imagen",
-    "es_venta": true,
-    "autor": {
+    "type": "image",
+    "is_sale": true,
+    "reaction_count": 12,
+    "image_url": "https://...",
+    "video_url": null,
+    "author": {
       "id": 3,
-      "username": "frutas_pedro"
+      "username": "frutas_pedro",
+      "visible_name": "Frutas Pedro",
+      "image": "https://..."
     },
-    "contenido": {
-      "descripcion": "Caja de frutillas frescas",
-      "url_imagen": "https://..."
-    }
+    "createdAt": "2026-05-15T12:00:00.000Z",
+    "text": "Caja de frutillas frescas"
   }
 }`,
-      errores: getPublicacionByIdError,
+      errors: getContentByIdError,
     },
     {
-      modulo: "Publicaciones",
-      metodo: "POST",
-      ruta: "/api/publicaciones",
-      descripcion: "Crea una nueva publicación.",
+      module: "Content",
+      method: "POST",
+      path: "/api/publicaciones",
+      description: "Crea una nueva publicación de tipo image.",
       auth: "Sí",
       body: `{
-  "tipo": "imagen",
-  "es_venta": true,
-  "descripcion": "Caja de frutillas frescas",
-  "url_imagen": "https://..."
+  "type": "image",
+  "is_sale": true,
+  "text": "Caja de frutillas frescas",
+  "image_url": "https://..."
 }`,
-      respuesta: `{
+      response: `{
   "success": true,
-  "publicacion": {
+  "content": {
     "id": 5,
-    "tipo": "imagen",
-    "es_venta": true,
-    "descripcion": "Caja de frutillas frescas",
-    "url_imagen": "https://..."
+    "type": "image",
+    "is_sale": true,
+    "reaction_count": 0,
+    "image_url": "https://...",
+    "video_url": null,
+    "text": "Caja de frutillas frescas",
+    "createdAt": "2026-05-15T14:00:00.000Z"
   }
 }`,
-      errores: postPublicacionesError,
+      errors: postContentsError,
+    },
+    {
+      module: "Content",
+      method: "POST",
+      path: "/api/publicaciones",
+      description: "Crea una nueva publicación de tipo post.",
+      auth: "Sí",
+      body: `{
+  "type": "post",
+  "is_sale": false,
+  "text": "Hoy llegaron nuevas frutas de temporada."
+}`,
+      response: `{
+  "success": true,
+  "content": {
+    "id": 6,
+    "type": "post",
+    "is_sale": false,
+    "reaction_count": 0,
+    "image_url": null,
+    "video_url": null,
+    "text": "Hoy llegaron nuevas frutas de temporada.",
+    "createdAt": "2026-05-15T14:10:00.000Z"
+  }
+}`,
+      errors: postContentsError,
+    },
+    {
+      module: "Content",
+      method: "POST",
+      path: "/api/publicaciones",
+      description: "Crea una nueva publicación de tipo reel.",
+      auth: "Sí",
+      body: `{
+  "type": "reel",
+  "is_sale": false,
+  "text": "Mira cómo preparamos los pedidos de hoy.",
+  "video_url": "https://..."
+}`,
+      response: `{
+  "success": true,
+  "content": {
+    "id": 7,
+    "type": "reel",
+    "is_sale": false,
+    "reaction_count": 0,
+    "image_url": null,
+    "video_url": "https://...",
+    "text": "Mira cómo preparamos los pedidos de hoy.",
+    "createdAt": "2026-05-15T14:20:00.000Z"
+  }
+}`,
+      errors: postContentsError,
     },
   ];
 
@@ -329,16 +447,16 @@ function App() {
         {endpoints.map((endpoint, index) => (
           <article className="endpoint-card" key={index}>
             <div className="endpoint-header">
-              <span className={getMethodClass(endpoint.metodo)}>
-                {endpoint.metodo}
+              <span className={getMethodClass(endpoint.method)}>
+                {endpoint.method}
               </span>
-              <code>{endpoint.ruta}</code>
+              <code>{endpoint.path}</code>
             </div>
 
-            <p className="description">{endpoint.descripcion}</p>
+            <p className="description">{endpoint.description}</p>
 
             <div className="meta">
-              <span>Módulo: {endpoint.modulo}</span>
+              <span>Módulo: {endpoint.module}</span>
               <span>Requiere JWT: {endpoint.auth}</span>
             </div>
 
@@ -350,7 +468,7 @@ function App() {
 
               <div>
                 <h3>Respuesta esperada</h3>
-                <pre>{endpoint.respuesta}</pre>
+                <pre>{endpoint.response}</pre>
               </div>
             </div>
 
@@ -358,12 +476,13 @@ function App() {
               <h3>Errores posibles</h3>
 
               <div className="errors-grid">
-                {endpoint.errores.map((error, errorIndex) => (
+                {endpoint.errors.map((error, errorIndex) => (
                   <div className="error-card" key={errorIndex}>
                     <div className="error-header">
                       <span className="error-status">{error.status}</span>
                       <span className="error-code">{error.code}</span>
                     </div>
+
                     <p>{error.message}</p>
 
                     <pre>{`{
