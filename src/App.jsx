@@ -43,6 +43,11 @@ function App() {
       message: "Correo o contraseña incorrectos.",
     },
     {
+      status: 403,
+      code: "USER_NOT_ACTIVE",
+      message: "La cuenta no esta activa",
+    },
+    {
       status: 500,
       code: "INTERNAL_SERVER_ERROR",
       message: "Ocurrió un error inesperado en el servidor.",
@@ -151,13 +156,16 @@ function App() {
       module: "Auth",
       method: "POST",
       path: "/api/auth/register",
-      description: "Registra un nuevo usuario en OnlyFrutas.",
+      description:
+        "Registra un nuevo usuario en OnlyFrutas. El campo pfp es opcional; si no se envía, el backend usa una imagen por defecto.",
       auth: "No",
       body: `{
   "username": "felipe",
   "visible_name": "Felipe",
   "email": "felipe@mail.com",
-  "password": "123456"
+  "password": "123456",
+  "region": "Metropolitana",
+  "pfp": "https://example.com/profile.jpg"
 }`,
       response: `{
   "success": true,
@@ -166,6 +174,9 @@ function App() {
     "id": 1,
     "username": "felipe",
     "visible_name": "Felipe",
+    "email": "felipe@mail.com",
+    "pfp": "https://...",
+    "region": "Metropolitana",
     "rol": "usuario"
   }
 }`,
@@ -187,6 +198,10 @@ function App() {
   "user": {
     "id": 1,
     "username": "felipe",
+    "visible_name": "Felipe",
+    "email": "felipe@mail.com",
+    "pfp": "https://...",
+    "region": "Metropolitana",
     "rol": "usuario"
   }
 }`,
@@ -206,6 +221,8 @@ function App() {
     "username": "felipe",
     "visible_name": "Felipe",
     "email": "felipe@mail.com",
+    "pfp": "https://...",
+    "region": "Metropolitana",
     "rol": "usuario"
   }
 }`,
@@ -214,8 +231,9 @@ function App() {
     {
       module: "Content",
       method: "GET",
-      path: "/api/publicaciones",
-      description: "Obtiene las publicaciones para poblar la Main Page.",
+      path: "/api/contents",
+      description:
+        "Obtiene los contenidos para poblar la Main Page. Puede devolver contenidos de tipo image, post o reel.",
       auth: "No",
       body: "No requiere body.",
       response: `{
@@ -232,9 +250,9 @@ function App() {
         "id": 3,
         "username": "frutas_pedro",
         "visible_name": "Frutas Pedro",
-        "image": "https://..."
+        "pfp": "https://..."
       },
-      "createdAt": "2026-05-15T12:00:00.000Z",
+      "created_at": "2026-05-15T12:00:00.000Z",
       "text": "Caja de frutillas frescas"
     },
     {
@@ -248,9 +266,9 @@ function App() {
         "id": 4,
         "username": "la_feria",
         "visible_name": "La Feria",
-        "image": null
+        "pfp": "https://..."
       },
-      "createdAt": "2026-05-15T13:30:00.000Z",
+      "created_at": "2026-05-15T13:30:00.000Z",
       "text": "Hoy llegaron nuevas frutas de temporada."
     },
     {
@@ -264,9 +282,9 @@ function App() {
         "id": 5,
         "username": "frutas_sur",
         "visible_name": "Frutas del Sur",
-        "image": null
+        "pfp": "https://..."
       },
-      "createdAt": "2026-05-15T14:00:00.000Z",
+      "created_at": "2026-05-15T14:00:00.000Z",
       "text": "Preparando pedidos de la mañana."
     }
   ],
@@ -279,8 +297,8 @@ function App() {
     {
       module: "Content",
       method: "GET",
-      path: "/api/publicaciones/:id",
-      description: "Obtiene el detalle de una publicación específica.",
+      path: "/api/contents/:id",
+      description: "Obtiene el detalle de un contenido específico.",
       auth: "No",
       body: "No requiere body.",
       response: `{
@@ -296,9 +314,9 @@ function App() {
       "id": 3,
       "username": "frutas_pedro",
       "visible_name": "Frutas Pedro",
-      "image": "https://..."
+      "pfp": "https://..."
     },
-    "createdAt": "2026-05-15T12:00:00.000Z",
+    "created_at": "2026-05-15T12:00:00.000Z",
     "text": "Caja de frutillas frescas"
   }
 }`,
@@ -307,8 +325,9 @@ function App() {
     {
       module: "Content",
       method: "POST",
-      path: "/api/publicaciones",
-      description: "Crea una nueva publicación de tipo image.",
+      path: "/api/contents",
+      description:
+        "Crea un nuevo contenido de tipo image. Requiere image_url.",
       auth: "Sí",
       body: `{
   "type": "image",
@@ -326,7 +345,7 @@ function App() {
     "image_url": "https://...",
     "video_url": null,
     "text": "Caja de frutillas frescas",
-    "createdAt": "2026-05-15T14:00:00.000Z"
+    "created_at": "2026-05-15T14:00:00.000Z"
   }
 }`,
       errors: postContentsError,
@@ -334,8 +353,9 @@ function App() {
     {
       module: "Content",
       method: "POST",
-      path: "/api/publicaciones",
-      description: "Crea una nueva publicación de tipo post.",
+      path: "/api/contents",
+      description:
+        "Crea un nuevo contenido de tipo post. Requiere text.",
       auth: "Sí",
       body: `{
   "type": "post",
@@ -352,7 +372,7 @@ function App() {
     "image_url": null,
     "video_url": null,
     "text": "Hoy llegaron nuevas frutas de temporada.",
-    "createdAt": "2026-05-15T14:10:00.000Z"
+    "created_at": "2026-05-15T14:10:00.000Z"
   }
 }`,
       errors: postContentsError,
@@ -360,8 +380,9 @@ function App() {
     {
       module: "Content",
       method: "POST",
-      path: "/api/publicaciones",
-      description: "Crea una nueva publicación de tipo reel.",
+      path: "/api/contents",
+      description:
+        "Crea un nuevo contenido de tipo reel. Requiere video_url.",
       auth: "Sí",
       body: `{
   "type": "reel",
@@ -379,7 +400,7 @@ function App() {
     "image_url": null,
     "video_url": "https://...",
     "text": "Mira cómo preparamos los pedidos de hoy.",
-    "createdAt": "2026-05-15T14:20:00.000Z"
+    "created_at": "2026-05-15T14:20:00.000Z"
   }
 }`,
       errors: postContentsError,
