@@ -9,27 +9,37 @@ function App() {
 }`;
 
   const postAuthRegisterError = [
-    {
-      status: 400,
-      code: "VALIDATION_ERROR",
-      message: "Faltan campos obligatorios.",
-    },
-    {
-      status: 409,
-      code: "EMAIL_ALREADY_EXISTS",
-      message: "Ya existe una cuenta registrada con este correo.",
-    },
-    {
-      status: 409,
-      code: "USERNAME_ALREADY_EXISTS",
-      message: "El nombre de usuario ya está en uso.",
-    },
-    {
-      status: 500,
-      code: "INTERNAL_SERVER_ERROR",
-      message: "Ocurrió un error inesperado en el servidor.",
-    },
-  ];
+  {
+    status: 400,
+    code: "VALIDATION_ERROR",
+    message: "Faltan campos obligatorios.",
+  },
+  {
+    status: 400,
+    code: "PFP_URL_TOO_LONG",
+    message: "La URL de la foto de perfil es demasiado larga",
+  },
+  {
+    status: 400,
+    code: "PFP_URL_NOT_VALID",
+    message: "El formato de la URL no es valido",
+  },
+  {
+    status: 409,
+    code: "EMAIL_ALREADY_EXISTS",
+    message: "Ya existe una cuenta registrada con este correo.",
+  },
+  {
+    status: 409,
+    code: "USERNAME_ALREADY_EXISTS",
+    message: "El nombre de usuario ya está en uso.",
+  },
+  {
+    status: 500,
+    code: "INTERNAL_SERVER_ERROR",
+    message: "Ocurrió un error inesperado en el servidor.",
+  },
+];
 
   const postAuthLoginError = [
     {
@@ -108,48 +118,58 @@ function App() {
     },
   ];
 
-  const postContentsError = [
-    {
-      status: 400,
-      code: "VALIDATION_ERROR",
-      message: "Faltan campos obligatorios para crear la publicación.",
-    },
-    {
-      status: 400,
-      code: "VALIDATION_ERROR",
-      message: "El tipo de contenido no es valido",
-    },
-    {
-      status: 400,
-      code: "VALIDATION_ERROR",
-      message: "URL de imagen no valido",
-    },
-    {
-      status: 400,
-      code: "VALIDATION_ERROR",
-      message: "URL del video no valido",
-    },
-    {
-      status: 400,
-      code: "VALIDATION_ERROR",
-      message: "Post vacio",
-    },
-    {
-      status: 401,
-      code: "MISSING_TOKEN",
-      message: "Debes iniciar sesión para crear una publicación.",
-    },
-    {
-      status: 401,
-      code: "INVALID_TOKEN",
-      message: "La sesión no es válida o expiró.",
-    },
-    {
-      status: 500,
-      code: "INTERNAL_SERVER_ERROR",
-      message: "Ocurrió un error inesperado en el servidor.",
-    },
-  ];
+ const postContentsError = [
+  {
+    status: 400,
+    code: "VALIDATION_ERROR",
+    message: "Faltan campos obligatorios para crear la publicación.",
+  },
+  {
+    status: 400,
+    code: "VALIDATION_ERROR",
+    message: "El tipo de contenido no es valido",
+  },
+  {
+    status: 400,
+    code: "VALIDATION_ERROR",
+    message: "URL de imagen no valido",
+  },
+  {
+    status: 400,
+    code: "VALIDATION_ERROR",
+    message: "URL del video no valido",
+  },
+  {
+    status: 400,
+    code: "CONTENT_IMAGE_TOO_LONG",
+    message: "URL del imagen muy largo",
+  },
+  {
+    status: 400,
+    code: "CONTENT_VIDEO_TOO_LONG",
+    message: "URL del video muy largo",
+  },
+  {
+    status: 400,
+    code: "VALIDATION_ERROR",
+    message: "Post vacio",
+  },
+  {
+    status: 401,
+    code: "MISSING_TOKEN",
+    message: "Debes iniciar sesión para crear una publicación.",
+  },
+  {
+    status: 401,
+    code: "INVALID_TOKEN",
+    message: "La sesión no es válida o expiró.",
+  },
+  {
+    status: 500,
+    code: "INTERNAL_SERVER_ERROR",
+    message: "Ocurrió un error inesperado en el servidor.",
+  },
+];
 
   const endpoints = [
     {
